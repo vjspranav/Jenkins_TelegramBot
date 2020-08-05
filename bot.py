@@ -12,11 +12,14 @@ from telegram.ext import Updater
 from telegram.ext import CommandHandler, ConversationHandler
 from functools import wraps
 import requests
+import json
 
-jenkins_url = (your jenkins url)
-jenkins_user = (your jenkins username)
-jenkins_pwd = (your jenkins password)
-jenkins_pass = (your jenkins password)
+with open("config.json") as json_config_file:
+    config = json.load(json_config_file)
+
+jenkins_url = config["jenkins"]["host"]
+jenkins_user = config["jenkins"]["user"]
+jenkins_pass = config["jenkins"]["pass"]
 
 def jenbuild(token, job, device, buildWithParameters = True):
     jenkins_job_name = job
@@ -60,7 +63,7 @@ conf['restricted_ids'] = restricted_ids
 # Append the chat ids or the group id to which you want to restrict the bot access
 # restricted_ids.append()
 
-token = (Your Bot Token)
+token = config["telegram"]["token"]
 
 bot = telegram.Bot(token=token)
 print(bot.get_me())
