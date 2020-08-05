@@ -4,6 +4,10 @@ Going through the script would help you out with what all changes you need
 
 # Configuration
 
+Install dependencies:
+
+    pip3 install -r requirements.txt
+
 Create the following file:
 
 `config.json`:
