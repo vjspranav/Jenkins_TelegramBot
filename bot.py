@@ -60,11 +60,11 @@ conf['restricted_ids'] = restricted_ids
 # Append the chat ids or the group id to which you want to restrict the bot access
 # restricted_ids.append()
 
-TOKEN=(Your Bot Token)
+token = (Your Bot Token)
 
-bot = telegram.Bot(token=TOKEN)
+bot = telegram.Bot(token=token)
 print(bot.get_me())
-updater = Updater(token=TOKEN, use_context=True)
+updater = Updater(token=token, use_context=True)
 dispatcher = updater.dispatcher
 
 def restricted(func):
