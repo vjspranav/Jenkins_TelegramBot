@@ -13,7 +13,7 @@ from telegram.ext import CommandHandler, ConversationHandler
 from functools import wraps
 import requests
 
-Jenkins_url = (your jenkins url)
+jenkins_url = (your jenkins url)
 jenkins_user = (your jenkins username)
 jenkins_pwd = (your jenkins password)
 
@@ -23,13 +23,13 @@ def jenbuild(token, job, device, buildWithParameters = True):
 
     try:
         auth= (jenkins_user, jenkins_pwd)
-        crumb_data= requests.get("{0}/crumbIssuer/api/json".format(Jenkins_url),auth = auth,headers={'content-type': 'application/json'})
+        crumb_data= requests.get("{0}/crumbIssuer/api/json".format(jenkins_url), auth = auth, headers={'content-type': 'application/json'})
         if str(crumb_data.status_code) == "200":
 
                 if buildWithParameters:
-                        data = requests.get("{0}/job/{1}/buildWithParameters".format(Jenkins_url,jenkins_job_name),auth=auth,params=jenkins_params,headers={'content-type': 'application/json','Jenkins-Crumb':crumb_data.json()['crumb']})
+                        data = requests.get("{0}/job/{1}/buildWithParameters".format(jenkins_url, jenkins_job_name), auth=auth, params=jenkins_params, headers={'content-type': 'application/json', 'Jenkins-Crumb':crumb_data.json()['crumb']})
                 else:
-                        data = requests.get("{0}/job/{1}/build".format(Jenkins_url,jenkins_job_name),auth=auth,params=jenkins_params,headers={'content-type': 'application/json','Jenkins-Crumb':crumb_data.json()['crumb']})
+                        data = requests.get("{0}/job/{1}/build".format(jenkins_url, jenkins_job_name), auth=auth, params=jenkins_params, headers={'content-type': 'application/json', 'Jenkins-Crumb':crumb_data.json()['crumb']})
 
                 if str(data.status_code) == "201":
                  print ("Jenkins job is triggered")
