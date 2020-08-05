@@ -26,8 +26,8 @@ def jenbuild(token, job, device, buildWithParameters = True):
     jenkins_params = {'token': token, 'device': device}
 
     try:
-        auth= (jenkins_user, jenkins_pass)
-        crumb_data= requests.get("{0}/crumbIssuer/api/json".format(jenkins_url), auth = auth, headers={'content-type': 'application/json'})
+        auth = (jenkins_user, jenkins_pass)
+        crumb_data = requests.get("{0}/crumbIssuer/api/json".format(jenkins_url), auth = auth, headers={'content-type': 'application/json'})
         if str(crumb_data.status_code) == "200":
 
                 if buildWithParameters:
