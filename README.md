@@ -1,9 +1,26 @@
-This is a simple Telegram bot that you can use to invoke jenkins build.
-You'd need to provide a few details before (edit the script)
-Going through the script would help you out with what all changes you need
+Telegram bot to help you invoke Jenkins builds
 
-# Will Update the Readme properly soon
+## Configuration
 
-Jenkins build script taken from https://www.easyaslinux.com/tutorials/devops/how-to-trigger-a-jenkins-job-remotely-from-python-script/
+Install dependencies:
 
-Hope you find it useful
+    pip3 install -r requirements.txt
+
+Create the following file:
+
+`config.json`:
+
+    {
+      "jenkins": {
+        "host": "jenkins.teamname.com",
+        "user": "username",
+        "pass": "test12345"
+      },
+      "telegram": {
+        "token": "xxxx"
+      }
+    }
+
+## Credits
+
+[Jenkins build script taken from Easy as Linux.](https://www.easyaslinux.com/tutorials/devops/how-to-trigger-a-jenkins-job-remotely-from-python-script/)

@@ -12,24 +12,28 @@ from telegram.ext import Updater
 from telegram.ext import CommandHandler, ConversationHandler
 from functools import wraps
 import requests
+import json
 
-Jenkins_url = (your jenkins url)
-jenkins_user = (your jenkins username)
-jenkins_pwd = (your jenkins password)
+with open("config.json") as json_config_file:
+    config = json.load(json_config_file)
+
+jenkins_url = config["jenkins"]["host"]
+jenkins_user = config["jenkins"]["user"]
+jenkins_pass = config["jenkins"]["pass"]
 
 def jenbuild(token, job, device, buildWithParameters = True):
     jenkins_job_name = job
     jenkins_params = {'token': token, 'device': device}
 
     try:
-        auth= (jenkins_user, jenkins_pwd)
-        crumb_data= requests.get("{0}/crumbIssuer/api/json".format(Jenkins_url),auth = auth,headers={'content-type': 'application/json'})
+        auth = (jenkins_user, jenkins_pass)
+        crumb_data = requests.get("{0}/crumbIssuer/api/json".format(jenkins_url), auth = auth, headers={'content-type': 'application/json'})
         if str(crumb_data.status_code) == "200":
 
                 if buildWithParameters:
-                        data = requests.get("{0}/job/{1}/buildWithParameters".format(Jenkins_url,jenkins_job_name),auth=auth,params=jenkins_params,headers={'content-type': 'application/json','Jenkins-Crumb':crumb_data.json()['crumb']})
+                        data = requests.get("{0}/job/{1}/buildWithParameters".format(jenkins_url, jenkins_job_name), auth=auth, params=jenkins_params, headers={'content-type': 'application/json', 'Jenkins-Crumb':crumb_data.json()['crumb']})
                 else:
-                        data = requests.get("{0}/job/{1}/build".format(Jenkins_url,jenkins_job_name),auth=auth,params=jenkins_params,headers={'content-type': 'application/json','Jenkins-Crumb':crumb_data.json()['crumb']})
+                        data = requests.get("{0}/job/{1}/build".format(jenkins_url, jenkins_job_name), auth=auth, params=jenkins_params, headers={'content-type': 'application/json', 'Jenkins-Crumb':crumb_data.json()['crumb']})
 
                 if str(data.status_code) == "201":
                  print ("Jenkins job is triggered")
@@ -59,11 +63,11 @@ conf['restricted_ids'] = restricted_ids
 # Append the chat ids or the group id to which you want to restrict the bot access
 # restricted_ids.append()
 
-TOKEN=(Your Bot Token)
+token = config["telegram"]["token"]
 
-bot = telegram.Bot(token=TOKEN)
+bot = telegram.Bot(token=token)
 print(bot.get_me())
-updater = Updater(token=TOKEN, use_context=True)
+updater = Updater(token=token, use_context=True)
 dispatcher = updater.dispatcher
 
 def restricted(func):
