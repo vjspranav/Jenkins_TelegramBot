@@ -36,18 +36,18 @@ def jenbuild(token, job, device, buildWithParameters = True):
                         data = requests.get("{0}/job/{1}/build".format(jenkins_url, jenkins_job_name), auth=auth, params=jenkins_params, headers={'content-type': 'application/json', 'Jenkins-Crumb':crumb_data.json()['crumb']})
 
                 if str(data.status_code) == "201":
-                 print ("Jenkins job is triggered")
+                 print("Triggered Jenkins job.")
                  return True
                 else:
-                 print ("Failed to trigger the Jenkins job")
+                 print("Failed to trigger Jenkins job.")
                  return False
 
         else:
-                print("Couldn't fetch Jenkins-Crumb")
+                print("Couldn't fetch Jenkins crumb data.")
                 raise
 
     except Exception as e:
-        print ("Failed triggering the Jenkins job")
+        print ("Failed triggering Jenkins job")
         print ("Error: " + str(e))
 
 # Enable logging
@@ -114,12 +114,12 @@ Usage:
 @restricted
 def buildno(update, context):
     user_id = update.effective_chat.id
-    suc="Build Started for all Devices "
-    fai="Something went wrong"
+    success="Build started for all devices."
+    fail="Build failed."
     if jenbuild(()Token generated in jenkins build, (Job Name), 'null', False):
-        context.bot.send_message(chat_id=update.effective_chat.id, text=suc)
+        context.bot.send_message(chat_id=update.effective_chat.id, text=success)
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=fai)
+        context.bot.send_message(chat_id=update.effective_chat.id, text=fail)
 
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
