@@ -85,7 +85,7 @@ def restricted(func):
 
 def start(update, context):
     user_id = update.effective_chat.id
-    context.bot.send_message(chat_id=update.effective_chat.id, text="Hello There welcome to Jenkins Bot")
+    context.bot.send_message(chat_id=update.effective_chat.id, text="Hi! Welcome to the Jenkins bot.")
 
 # Add a coment below before @restricted to allow access to everyone
 @restricted
@@ -103,7 +103,11 @@ def build(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text=fai)
 
 def help(update, context):
-    h="Yo Looks like you need help\n/build devicename - to trigger build for devicename where it is a parameter\n/buildno for no parameter builds\nPeace"
+    h="""
+Usage:
+/build devicename - trigger build for devicename
+/buildno for no parameter builds
+"""
     context.bot.send_message(chat_id=update.effective_chat.id, text=h)
 
 # Add a coment below before @restricted to allow access to everyone
