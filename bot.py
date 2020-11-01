@@ -14,6 +14,7 @@ from functools import wraps
 import requests
 import json
 
+config={}
 with open("config.json") as json_config_file:
     config = json.load(json_config_file)
 
@@ -21,9 +22,15 @@ jenkins_url = config["jenkins"]["host"]
 jenkins_user = config["jenkins"]["user"]
 jenkins_pass = config["jenkins"]["pass"]
 
-def jenbuild(token, job, device, buildWithParameters = True):
+'''
+For Pipeline builds Replace
+    requests.get
+with
+    requests.post
+'''
+def jenbuild(token, job, jenkins_params, buildWithParameters = True):
     jenkins_job_name = job
-    jenkins_params = {'token': token, 'device': device}
+    jenkins_params = {'token': token}
 
     try:
         auth = (jenkins_user, jenkins_pass)
@@ -56,6 +63,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
+# Add telegram id's separated with comma to which you want to restrict bot to
 restricted_ids = []
 conf = {}
 conf['restricted_ids'] = restricted_ids
@@ -74,7 +82,7 @@ def restricted(func):
     """Restrict usage of func to allowed users only and replies if necessary"""
     @wraps(func)
     def wrapped(update, context, *args, **kwargs):
-        user_id = update.effective_chat.id
+        user_id = update.effective_user.id
         if user_id not in conf['restricted_ids']:
             print(user_id, " is not in ", conf['restricted_ids'])
             print("WARNING: Unauthorized access denied for {}.".format(user_id))
@@ -87,25 +95,68 @@ def start(update, context):
     user_id = update.effective_chat.id
     context.bot.send_message(chat_id=update.effective_chat.id, text="Hi! Welcome to the Jenkins bot.")
 
+'''
+    For example you have a choice jenkins parameter named
+    clean :
+        yes
+        no
+    as choices then,
+    p1="clean"
+    param1="yes"
+    if no value is passed it'll be yes by default
+    and so on for any extra parameters to be added.
+    
+    To use:
+        /build <paramname> <paramvalue>
+    Example, Let's say we have two params, clean(with yes/no) and device(any string):
+        /build device enchilada clean yes
+        
+    Has for p1 and p2 (two parameters), to extend/add more arguments 
+    just copy paste and extend at 3 places where comments have been provided for help.
+
+'''
 # Add a coment below before @restricted to allow access to everyone
 @restricted
 def build(update, context):
     inp = update.message.text
-    if len(inp.split(" ")) == 1:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Device name not provided")
-        return
-    inp = inp.split(" ")[1]
-    suc="Build triggered for " + inp
-    fai="Something went wrong for " + inp
-    if jenbuild((Token generated in jenkins build), (Job Name), inp):
-        context.bot.send_message(chat_id=update.effective_chat.id, text=suc)
+    jenkins_job_name ="<your jenkins job name>"
+    #[1/3] Add p3 and param3 here below
+    p1="<name of parameter1>"
+    p2="<name of parameter2>"
+    param1="<default value of param1>"
+    param2="<default value of param1>"
+    l="Starting Job\n"
+    sent=context.bot.send_message(chat_id=update.effective_chat.id, text=l)
+
+    #[2/3] Add if conditions for p3 and param3 here below
+    if p1 in inp:
+        param1 = inp[inp.split(" ").index(p1) + 1]
+        l+="With " + p1 +" = " + param1 + "\n" 
+        sent.edit_text(l)
+
+    if p2 in inp:
+        param2 = inp[inp.split(" ").index(p2) + 1]
+        l+="With " + p1 +" = " + param1 + "\n" 
+        sent.edit_text(l)
+    
+    #[3/3] Add p3 and param3 here as done for p1, p2
+    params={
+        p1:param1,
+        p2:param2
+        }
+    success= "\n" + inp + " triggered"
+    fail="\nSomething went wrong for job " + inp
+    # Generate a random token key and set it for jenkins build and add below
+    if jenbuild("<Jenkins Job token>", jenkins_job_name, params, True):
+        sent.edit_text(l+success)
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=fai)
+        sent.edit_text(l+fail)
 
 def help(update, context):
     h="""
 Usage:
-/build devicename - trigger build for devicename
+/build <param> <param value> - trigger build with paramvalue for param
+- Multiple parameters (as supported by job) in any order can be provided
 /buildno for no parameter builds
 """
     context.bot.send_message(chat_id=update.effective_chat.id, text=h)
@@ -113,10 +164,12 @@ Usage:
 # Add a coment below before @restricted to allow access to everyone
 @restricted
 def buildno(update, context):
-    user_id = update.effective_chat.id
-    success="Build started for all devices."
-    fail="Build failed."
-    if jenbuild(()Token generated in jenkins build, (Job Name), 'null', False):
+    jenkins_job_name ="<your jenkins job name>"
+    success="Jenkins job started"
+    fail="Jenkins job could not be started"
+    params={}
+    # Generate a random token key and set it for jenkins build
+    if jenbuild("<Jenkins Job token>", jenkins_job_name, params, False):
         context.bot.send_message(chat_id=update.effective_chat.id, text=success)
     else:
         context.bot.send_message(chat_id=update.effective_chat.id, text=fail)
@@ -139,4 +192,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

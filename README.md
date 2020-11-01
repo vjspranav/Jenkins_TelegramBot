@@ -1,4 +1,7 @@
-Telegram bot to help you invoke Jenkins builds
+# Telegram bot to help you invoke Jenkins builds
+
+## How to use
+A detailed use case guide will be added
 
 ## Configuration
 
@@ -6,7 +9,7 @@ Install dependencies:
 
     pip3 install -r requirements.txt
 
-Create the following file:
+Edit the following file:
 
 `config.json`:
 
@@ -20,6 +23,14 @@ Create the following file:
         "token": "xxxx"
       }
     }
+
+## TODO
+- [ ] Build status support  
+- [ ] Build Success or fail report
+
+## Contributions
+Any mistakes, or additions do the change test and do a pull request.  
+Feel free to contact me on telegram if any issues @vjspranav
 
 ## Credits
 

@@ -1,0 +1,10 @@
+{
+  "jenkins": {
+    "host": "<jenkins host domain/ip>",
+    "user": "<jenkins username>",
+    "pass": "<jenkins pass>"
+  },
+  "telegram": {
+    "token": "<token of your telegram bot>"
+  }
+}
