@@ -30,7 +30,7 @@ with
 '''
 def jenbuild(token, job, jenkins_params, buildWithParameters = True):
     jenkins_job_name = job
-    jenkins_params = {'token': token}
+    jenkins_params['token'] = token
 
     try:
         auth = (jenkins_user, jenkins_pass)
@@ -130,13 +130,13 @@ def build(update, context):
 
     #[2/3] Add if conditions for p3 and param3 here below
     if p1 in inp:
-        param1 = inp[inp.split(" ").index(p1) + 1]
+        param1 = inp.split(" ")[inp.split(" ").index(p1) + 1]
         l+="With " + p1 +" = " + param1 + "\n" 
         sent.edit_text(l)
 
     if p2 in inp:
-        param2 = inp[inp.split(" ").index(p2) + 1]
-        l+="With " + p1 +" = " + param1 + "\n" 
+        param2 = inp.split(" ")[inp.split(" ").index(p2) + 1]
+        l+="With " + p2 +" = " + param2 + "\n" 
         sent.edit_text(l)
     
     #[3/3] Add p3 and param3 here as done for p1, p2
