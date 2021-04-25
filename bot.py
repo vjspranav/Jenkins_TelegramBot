@@ -96,54 +96,33 @@ def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="Hi! Welcome to the Jenkins bot.")
 
 '''
-    For example you have a choice jenkins parameter named
-    clean :
-        yes
-        no
-    as choices then,
-    p1="clean"
-    param1="yes"
-    if no value is passed it'll be yes by default
-    and so on for any extra parameters to be added.
-    
     To use:
         /build <paramname> <paramvalue>
     Example, Let's say we have two params, clean(with yes/no) and device(any string):
         /build device enchilada clean yes
         
-    Has for p1 and p2 (two parameters), to extend/add more arguments 
-    just copy paste and extend at 3 places where comments have been provided for help.
-
+    Works for as many paramters
 '''
 # Add a coment below before @restricted to allow access to everyone
 @restricted
 def build(update, context):
     inp = update.message.text
     jenkins_job_name ="<your jenkins job name>"
-    #[1/3] Add p3 and param3 here below
-    p1="<name of parameter1>"
-    p2="<name of parameter2>"
-    param1="<default value of param1>"
-    param2="<default value of param1>"
+    pms = inp.split(' ')
     l="Starting Job\n"
     sent=context.bot.send_message(chat_id=update.effective_chat.id, text=l)
 
-    #[2/3] Add if conditions for p3 and param3 here below
-    if p1 in inp:
-        param1 = inp.split(" ")[inp.split(" ").index(p1) + 1]
-        l+="With " + p1 +" = " + param1 + "\n" 
-        sent.edit_text(l)
+    if len(pms)%2 == 0:
+        sent.edit_text("Invalid parameter key/value pairs given")
+        return
+    params={}
+    for i in range(1, len(pms), 2):
+        params[pms[i]] = pms[i+1]
+    print(params)
 
-    if p2 in inp:
-        param2 = inp.split(" ")[inp.split(" ").index(p2) + 1]
-        l+="With " + p2 +" = " + param2 + "\n" 
+    for p in params:
+        l+="With " + p +" = " + params[p] + "\n"
         sent.edit_text(l)
-    
-    #[3/3] Add p3 and param3 here as done for p1, p2
-    params={
-        p1:param1,
-        p2:param2
-        }
     success= "\n" + inp + " triggered"
     fail="\nSomething went wrong for job " + inp
     # Generate a random token key and set it for jenkins build and add below
